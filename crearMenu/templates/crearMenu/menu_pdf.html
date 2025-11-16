@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Menu {{ menu.nombre }}</title>
+
+    <style>
+        /* Es mejor usar fuentes seguras que todos los sistemas tengan */
+        body {
+            font-family: "Helvetica", "Arial", sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #111;
+            border-bottom: 2px solid #555;
+            padding-bottom: 10px;
+        }
+
+        .info-box {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Menú: {{ menu.nombre }}</h1>
+
+        <div class="info-box">
+            <p><strong>Restaurante:</strong> {{ menu.restaurante.nombre }}</p>
+            <p><strong>Ubicación:</strong> {{ menu.restaurante.ubicacion }}</p>
+            <p><strong>Chef:</strong> {{ menu.chef.nombre }}</p>
+            <p><strong>Tipo de Menú:</strong> {{ menu.tipo_menu.descripcion }}</p>
+        </div>
+
+        <h2>Platos Incluidos</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Plato</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in detalles %}
+                <tr>
+                    <td>{{ detalle.plato.nombre }}</td>
+
+                    <td>{{ detalle.plato.categoria.nombre|default:"N/A" }}</td>
+
+                    <td>${{ detalle.precio }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align: center;">
+                        Este menú no tiene platos asignados.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>Gracias por preferir {{ menu.restaurante.nombre }}.</p>
+        </div>
+
+    </div>
+</body>
+
+</html>

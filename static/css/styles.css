@@ -1,0 +1,33 @@
+/* static/css/style.css */
+
+/*
+  Esto aplica estilos de Bootstrap a los campos generados por {{ form.as_p }}
+*/
+form p {
+    margin-bottom: 1rem;
+    /* Añade espacio entre campos */
+}
+
+form p label {
+    display: block;
+    /* Pone el label encima del campo */
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+form p input[type="text"],
+form p select {
+    /* ¡La clase mágica de Bootstrap! */
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
