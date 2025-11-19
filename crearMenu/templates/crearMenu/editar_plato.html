@@ -1,0 +1,41 @@
+{% extends 'crearMenu/base.html' %}
+
+{% block title %}Editar {{ plato.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Editando: <span class="text-primary">{{ plato.nombre }}</span></h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">Datos Básicos</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ plato_form.as_p }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Información Nutricional</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ nutri_form.as_p }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'crearMenu:lista_platos' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary px-5">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

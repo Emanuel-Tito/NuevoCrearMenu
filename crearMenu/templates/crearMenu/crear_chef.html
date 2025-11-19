@@ -1,0 +1,24 @@
+{% extends 'crearMenu/base.html' %}
+{% block title %}Contratar Chef{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Registrar Nuevo Chef</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar Registro</button>
+                        <a href="{% url 'crearMenu:lista_chefs' %}" class="btn btn-link text-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

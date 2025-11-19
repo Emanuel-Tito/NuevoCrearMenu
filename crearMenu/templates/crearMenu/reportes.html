@@ -1,0 +1,64 @@
+{% extends 'crearMenu/base.html' %}
+
+{% block title %}Reportes del Negocio{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4 text-gray-800">Dashboard de Consultas Complejas</h1>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <h5 class="card-title text-primary fw-bold">Costo Total por Menú</h5>
+                <p class="text-muted small">Suma total de los precios de venta de los platos asignados.</p>
+                <table class="table table-sm table-hover mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Menú</th>
+                            <th>Restaurante</th>
+                            <th class="text-end">Costo Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in menus_costo %}
+                        <tr>
+                            <td>{{ item.nombre }}</td>
+                            <td>{{ item.restaurante.nombre }}</td>
+                            <td class="text-end fw-bold">${{ item.costo_total|default:"0.00" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-warning text-dark fw-bold">Top 5 Platos Calóricos</div>
+            <ul class="list-group list-group-flush">
+                {% for plato in platos_caloricos %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ plato.nombre }}
+                    <span class="badge bg-danger rounded-pill">{{ plato.detallenutricional.caloria|default:"0" }} kcal</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white fw-bold">👨‍🍳 Productividad de Chefs</div>
+            <ul class="list-group list-group-flush">
+                {% for chef in rendimiento_chefs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ chef.nombre }}
+                    <span class="badge bg-secondary">{{ chef.num_menus }} menús</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

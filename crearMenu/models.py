@@ -2,13 +2,11 @@ from django.db import models
 
 
 class TipoMenu(models.Model):
-    # En Django, el 'id' es automático, pero para mapear a 'IdTipoMenu'
-    # lo definimos explícitamente como la llave primaria.
     id_tipo_menu = models.AutoField(primary_key=True, db_column='IdTipoMenu')
     descripcion = models.CharField(max_length=255, db_column='Descripcion')
 
     class Meta:
-        db_table = 'SGR_P_TipoMenu'  # Nombre exacto de la tabla en SQL Server
+        db_table = 'SGR_P_TipoMenu'
 
     def __str__(self):
         return self.descripcion
@@ -49,8 +47,6 @@ class Ciudad(models.Model):
     def __str__(self):
         return self.descripcion
 
-# --- Tablas Maestras ---
-
 
 class Restaurante(models.Model):
     id_restaurante = models.AutoField(
@@ -76,10 +72,6 @@ class Chef(models.Model):
         max_length=20, null=True, blank=True, db_column='Telefono')
     sexo = models.CharField(max_length=1, null=True,
                             blank=True, db_column='Sexo')
-
-    # Relación ForeignKey (FK)
-    # on_delete=models.SET_NULL significa que si se borra la ciudad,
-    # este campo 'ciudad' en Chef se pondrá en NULO.
     ciudad = models.ForeignKey(
         Ciudad, on_delete=models.SET_NULL, null=True, blank=True, db_column='IdCiudad')
 
@@ -93,7 +85,6 @@ class Chef(models.Model):
 class Receta(models.Model):
     id_receta = models.AutoField(primary_key=True, db_column='IdReceta')
     nombre = models.CharField(max_length=255, db_column='Nombre')
-    # VARCHAR(MAX) en SQL Server se traduce como TextField en Django
     proceso = models.TextField(null=True, blank=True, db_column='Proceso')
 
     class Meta:
@@ -106,8 +97,6 @@ class Receta(models.Model):
 class Plato(models.Model):
     id_plato = models.AutoField(primary_key=True, db_column='IdPlato')
     nombre = models.CharField(max_length=255, db_column='Nombre')
-
-    # Relaciones FK
     receta = models.ForeignKey(
         Receta, on_delete=models.SET_NULL, null=True, blank=True, db_column='IdReceta')
     categoria = models.ForeignKey(
@@ -123,15 +112,10 @@ class Plato(models.Model):
 class Menu(models.Model):
     id_menu = models.AutoField(primary_key=True, db_column='IdMenu')
     nombre = models.CharField(max_length=255, db_column='Nombre')
-
-    # Relaciones FK
     chef = models.ForeignKey(
         Chef, on_delete=models.SET_NULL, null=True, blank=True, db_column='IdChef')
     tipo_menu = models.ForeignKey(
         TipoMenu, on_delete=models.SET_NULL, null=True, blank=True, db_column='IdTipoMenu')
-
-    # Esta FK es NOT NULL, por lo que si se borra el restaurante,
-    # se borran en cascada todos los menús asociados.
     restaurante = models.ForeignKey(
         Restaurante, on_delete=models.CASCADE, db_column='IdRestaurante')
 
@@ -141,20 +125,14 @@ class Menu(models.Model):
     def __str__(self):
         return self.nombre
 
-# --- Tablas Transaccionales (Detalles) ---
-
 
 class DetalleIngrediente(models.Model):
     id_detalle_ingrediente = models.AutoField(
         primary_key=True, db_column='IdDetalleIngrediente')
-
-    # Relaciones FK (Estas son NOT NULL)
     receta = models.ForeignKey(
         Receta, on_delete=models.CASCADE, db_column='IdReceta')
     ingrediente = models.ForeignKey(
         Ingrediente, on_delete=models.CASCADE, db_column='IdIngrediente')
-
-    # DECIMAL(10,2) se traduce como DecimalField
     cantidad = models.DecimalField(
         max_digits=10, decimal_places=2, db_column='Cantidad')
 
@@ -162,15 +140,12 @@ class DetalleIngrediente(models.Model):
         db_table = 'SGR_T_DetalleIngrediente'
 
     def __str__(self):
-        # Un __str__ más descriptivo para tablas de detalle
         return f"{self.receta.nombre} - {self.ingrediente.nombre}"
 
 
 class DetalleMenu(models.Model):
     id_detalle_menu = models.AutoField(
         primary_key=True, db_column='IdDetalleMenu')
-
-    # Relaciones FK (NOT NULL)
     menu = models.ForeignKey(
         Menu, on_delete=models.CASCADE, db_column='IdMenu')
     plato = models.ForeignKey(
@@ -188,12 +163,8 @@ class DetalleMenu(models.Model):
 class DetalleNutricional(models.Model):
     id_detalle_nutricional = models.AutoField(
         primary_key=True, db_column='IdDetalleNutricional')
-
-    # Esta es una relación 1 a 1. Un plato tiene UN solo detalle nutricional.
     plato = models.OneToOneField(
         Plato, on_delete=models.CASCADE, db_column='IdPlato')
-
-    # Campos DECIMAL que pueden ser nulos
     carbohidratos = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True, db_column='Carbohidratos')
     proteina = models.DecimalField(

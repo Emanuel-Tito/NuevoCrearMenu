@@ -1,0 +1,47 @@
+{% extends 'crearMenu/base.html' %}
+{% block title %}Ingredientes{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">Nuevo Ingrediente</div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success w-100">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">Inventario de Ingredientes</div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th class="text-end">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ing in ingredientes %}
+                        <tr>
+                            <td>{{ ing.nombre }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'crearMenu:eliminar_ingrediente' ing.pk %}" 
+                                   class="btn btn-outline-danger btn-sm"
+                                   onclick="return confirm('¿Borrar ingrediente?');"></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

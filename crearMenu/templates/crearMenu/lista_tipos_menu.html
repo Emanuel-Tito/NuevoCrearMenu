@@ -1,0 +1,58 @@
+{% extends 'crearMenu/base.html' %}
+{% block title %}Tipos de Menú{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <h2 class="mb-4 text-center">Configuración de Tipos de Menú</h2>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Nuevo Tipo</div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        {{ form.descripcion }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">Tipos Disponibles</div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th class="text-end">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tipo in tipos %}
+                        <tr>
+                            <td>{{ tipo.descripcion }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'crearMenu:eliminar_tipo_menu' tipo.pk %}" 
+                                   class="btn btn-outline-danger btn-sm"
+                                   onclick="return confirm('¿Borrar este tipo de menú?');">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No hay tipos definidos.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,75 +1,66 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'crearMenu/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Menú</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block title %}Inicio - Crear Menús{% endblock %}
 
-<body class="bg-light">
-
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h1 class="h3 mb-0">Crear Cabecera de Menú</h1>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit" class="btn btn-primary w-100">Guardar y Añadir Platos</button>
-                        </form>
-                    </div>
-                </div>
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Nuevo Menú</h5>
             </div>
-
-            <div class="col-lg-7">
-                <h2 class="h4">Menús Creados</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre Menú</th>
-                                <th>Chef</th>
-                                <th>Restaurante</th>
-                                <th>Tipo</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for menu in menus %}
-                            <tr>
-                                <td>{{ menu.id_menu }}</td>
-                                <td>{{ menu.nombre }}</td>
-                                <td>{{ menu.chef.nombre }}</td>
-                                <td>{{ menu.restaurante.nombre }}</td>
-                                <td>{{ menu.tipo_menu.descripcion }}</td>
-                                <td>
-                                    <a href="{% url 'crearMenu:gestionar_detalle_menu' menu.id_menu %}"
-                                        class="btn btn-outline-info btn-sm">
-                                        Gestionar Platos
-                                    </a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" class="text-center">No hay menús creados.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary w-100">Crear y Continuar</button>
+                </form>
             </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-3">
+            <a href="{% url 'crearMenu:crear_plato' %}" class="btn btn-outline-success btn-sm">Registrar Nuevo Plato</a>
         </div>
     </div>
 
-</body>
-
-</html>
+    <div class="col-lg-8">
+        <h2 class="h4 mb-3 border-bottom pb-2">Historial de Menús</h2>
+        <div class="table-responsive bg-white shadow-sm rounded p-3">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Restaurante</th>
+                        <th>Tipo</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in menus %}
+                    <tr>
+                        <td class="fw-bold">{{ menu.nombre }}</td>
+                        <td>{{ menu.restaurante.nombre }}</td>
+                        <td><span class="badge bg-secondary">{{ menu.tipo_menu.descripcion }}</span></td>
+                        <td>
+                            <a href="{% url 'crearMenu:gestionar_detalle_menu' menu.id_menu %}" 
+                               class="btn btn-outline-info btn-sm">
+                                Gestionar / Ver
+                            </a>
+                            <a href="{% url 'crearMenu:eliminar_menu' menu.id_menu %}" 
+                            class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('¿Estás seguro de eliminar el menú {{ menu.nombre }}? Se borrarán todos sus detalles.');">
+                            Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">No hay menús registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'crearMenu/base.html' %}
+
+{% block title %}Nueva Categoría{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Nueva Categoría</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar Categoría</button>
+                        <a href="{% url 'crearMenu:crear_menu' %}" class="btn btn-link text-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

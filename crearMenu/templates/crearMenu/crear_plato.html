@@ -1,0 +1,42 @@
+{% extends 'crearMenu/base.html' %}
+
+{% block title %}Nuevo Plato{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 border-bottom pb-2">Registrar Nuevo Plato</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">1. Datos Generales</h5>
+                </div>
+                <div class="card-body">
+                    {{ plato_form.as_p }}
+                    <div class="alert alert-light border mt-3">
+                        <small>¿La categoría no existe? <a href="{% url 'crearMenu:crear_categoria' %}">Créala aquí primero</a>.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">2. Información Nutricional</h5>
+                </div>
+                <div class="card-body">
+                    {{ nutri_form.as_p }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <a href="{% url 'crearMenu:crear_menu' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-dark px-5">Guardar Plato Completo</button>
+    </div>
+</form>
+{% endblock %}
