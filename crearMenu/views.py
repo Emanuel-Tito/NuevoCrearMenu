@@ -4,7 +4,7 @@ from xhtml2pdf import pisa
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
-from .models import Ciudad, DetalleNutricional, Menu, Chef, TipoMenu, Restaurante, Plato, DetalleMenu, Ingrediente, Receta, DetalleIngrediente
+from .models import Categoria, Ciudad, DetalleNutricional, Menu, Chef, TipoMenu, Restaurante, Plato, DetalleMenu, Ingrediente, Receta, DetalleIngrediente
 from django.db.models import Sum, Count, Avg, F
 from .forms import CategoriaForm, ChefForm, CiudadForm, PlatoForm, DetalleNutricionalForm, IngredienteForm, RecetaForm, DetalleIngredienteForm, RestauranteForm, TipoMenuForm
 
@@ -83,23 +83,6 @@ def imprimir_menu_pdf(request, menu_id):
     return response
 
 
-def dashboard_reportes(request):
-    menus_con_costo = Menu.objects.annotate(
-        costo_total=Sum('detallemenu__precio')
-    )
-    platos_caloricos = Plato.objects.select_related(
-        'detallenutricional').order_by('-detallenutricional__caloria')[:5]
-    rendimiento_chefs = Chef.objects.annotate(
-        num_menus=Count('menu')
-    ).order_by('-num_menus')
-    context = {
-        'menus_costo': menus_con_costo,
-        'platos_caloricos': platos_caloricos,
-        'rendimiento_chefs': rendimiento_chefs
-    }
-    return render(request, 'crearMenu/reportes.html', context)
-
-
 def eliminar_detalle_menu(request, detalle_id):
     try:
         detalle = DetalleMenu.objects.get(pk=detalle_id)
@@ -119,6 +102,40 @@ def crear_categoria(request):
     else:
         form = CategoriaForm()
     return render(request, 'crearMenu/crear_categoria.html', {'form': form})
+
+
+def lista_categorias(request):
+    categorias = Categoria.objects.all().order_by('nombre')
+
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crearMenu:lista_categorias')
+    else:
+        form = CategoriaForm()
+    return render(request, 'crearMenu/lista_categorias.html', {
+        'categorias': categorias,
+        'form': form
+    })
+
+
+def editar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            return redirect('crearMenu:lista_categorias')
+    else:
+        form = CategoriaForm(instance=categoria)
+    return render(request, 'crearMenu/editar_categoria_simple.html', {'form': form})
+
+
+def eliminar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    categoria.delete()
+    return redirect('crearMenu:lista_categorias')
 
 
 def crear_plato(request):
@@ -180,6 +197,12 @@ def editar_plato(request, plato_id):
     })
 
 
+def eliminar_plato(request, plato_id):
+    plato = get_object_or_404(Plato, pk=plato_id)
+    plato.delete()
+    return redirect('crearMenu:lista_platos')
+
+
 def lista_ingredientes(request):
     ingredientes = Ingrediente.objects.all().order_by('nombre')
     if request.method == 'POST':
@@ -237,6 +260,12 @@ def gestionar_receta(request, receta_id):
     })
 
 
+def eliminar_receta(request, receta_id):
+    receta = get_object_or_404(Receta, pk=receta_id)
+    receta.delete()
+    return redirect('crearMenu:lista_recetas')
+
+
 def eliminar_detalle_ingrediente(request, detalle_id):
     detalle = get_object_or_404(DetalleIngrediente, pk=detalle_id)
     receta_id = detalle.receta.pk
@@ -259,6 +288,21 @@ def crear_chef(request):
         form = ChefForm()
 
     return render(request, 'crearMenu/crear_chef.html', {'form': form})
+
+
+def editar_chef(request, chef_id):
+    chef = get_object_or_404(Chef, pk=chef_id)
+    if request.method == 'POST':
+        form = ChefForm(request.POST, instance=chef)
+        if form.is_valid():
+            form.save()
+            return redirect('crearMenu:lista_chefs')
+    else:
+        form = ChefForm(instance=chef)
+    return render(request, 'crearMenu/crear_chef.html', {
+        'form': form,
+        'titulo': f'Editar Chef: {chef.nombre}'
+    })
 
 
 def eliminar_chef(request, chef_id):

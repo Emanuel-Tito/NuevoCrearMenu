@@ -1,0 +1,61 @@
+{% extends 'crearMenu/base.html' %}
+{% block title %}Gestión de Categorías{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <h2 class="mb-4 text-center">Categorías de Platos</h2>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">Nueva Categoría</div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        {{ form.nombre }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        {{ form.descripcion }}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">Categorías Existentes</div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cat in categorias %}
+                        <tr>
+                            <td><strong>{{ cat.nombre }}</strong></td>
+                            <td>{{ cat.descripcion|default:"-" }}</td>
+                            <td class="text-end" style="width: 160px;">
+                                <a href="{% url 'crearMenu:editar_categoria' cat.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <a href="{% url 'crearMenu:eliminar_categoria' cat.pk %}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('¿Borrar categoría?');">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center">No hay categorías.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

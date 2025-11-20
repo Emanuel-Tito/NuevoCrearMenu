@@ -15,9 +15,14 @@
                 <h5 class="card-title fw-bold">{{ receta.nombre }}</h5>
                 <p class="card-text text-muted small">{{ receta.proceso|truncatewords:15 }}</p>
             </div>
-            <div class="card-footer bg-transparent border-top-0">
+            <div class="card-footer bg-transparent border-top-0 d-flex gap-2">
                 <a href="{% url 'crearMenu:gestionar_receta' receta.pk %}" class="btn btn-outline-primary w-100">
-                    Gestionar Ingredientes
+                    Ingredientes
+                </a>
+                <a href="{% url 'crearMenu:eliminar_receta' receta.pk %}" 
+                class="btn btn-outline-danger"
+                onclick="return confirm('¿Eliminar receta?');">
+                Eliminar
                 </a>
             </div>
         </div>

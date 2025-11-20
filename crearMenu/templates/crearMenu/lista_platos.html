@@ -41,6 +41,11 @@
                         <a href="{% url 'crearMenu:editar_plato' plato.id_plato %}" class="btn btn-sm btn-outline-primary">
                             Editar
                         </a>
+                        <a href="{% url 'crearMenu:eliminar_plato' plato.id_plato %}" 
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('¿Borrar {{ plato.nombre }} y su info nutricional?');">
+                            Eliminar
+                        </a>
                     </td>
                 </tr>
                 {% empty %}

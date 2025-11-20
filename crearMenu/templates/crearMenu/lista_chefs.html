@@ -29,10 +29,13 @@
                     <td><span class="badge bg-secondary">{{ chef.turno }}</span></td>
                     <td>{{ chef.ciudad.descripcion|default:"-" }}</td>
                     <td class="text-end">
+                        <a href="{% url 'crearMenu:editar_chef' chef.pk %}" class="btn btn-sm btn-outline-primary">
+                        Editar
+                        </a>
                         <a href="{% url 'crearMenu:eliminar_chef' chef.pk %}" 
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('¿Eliminar chef del sistema?');">
-                            Eliminar
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('¿Eliminar chef del sistema?');">
+                        Eliminar
                         </a>
                     </td>
                 </tr>
