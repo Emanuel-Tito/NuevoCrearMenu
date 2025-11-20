@@ -3,8 +3,6 @@ from django.core.exceptions import ValidationError
 from .models import (Categoria, Plato, DetalleNutricional, Ingrediente,
                      Receta, DetalleIngrediente, Chef, Ciudad, TipoMenu, Restaurante)
 
-# --- FUNCIÓN DE VALIDACIÓN REUTILIZABLE ---
-
 
 def validar_no_es_numero(valor, nombre_campo):
     """Lanza error si el texto son solo dígitos"""
@@ -12,8 +10,6 @@ def validar_no_es_numero(valor, nombre_campo):
         raise ValidationError(
             f"El {nombre_campo} no puede contener solo números.")
     return valor
-
-# 1. INGREDIENTES
 
 
 class IngredienteForm(forms.ModelForm):
@@ -27,8 +23,6 @@ class IngredienteForm(forms.ModelForm):
     def clean_nombre(self):
         return validar_no_es_numero(self.cleaned_data['nombre'], "nombre del ingrediente")
 
-# 2. RECETAS
-
 
 class RecetaForm(forms.ModelForm):
     class Meta:
@@ -41,8 +35,6 @@ class RecetaForm(forms.ModelForm):
 
     def clean_nombre(self):
         return validar_no_es_numero(self.cleaned_data['nombre'], "nombre de la receta")
-
-# 3. DETALLE INGREDIENTE (Evitar guardar vacío)
 
 
 class DetalleIngredienteForm(forms.ModelForm):
@@ -60,8 +52,6 @@ class DetalleIngredienteForm(forms.ModelForm):
             raise ValidationError("Debes seleccionar un ingrediente válido.")
         return ingrediente
 
-# 4. CHEFS
-
 
 class ChefForm(forms.ModelForm):
     class Meta:
@@ -69,7 +59,6 @@ class ChefForm(forms.ModelForm):
         fields = ['nombre', 'cedula', 'turno', 'telefono', 'sexo', 'ciudad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            # Cédula sí puede ser número
             'cedula': forms.TextInput(attrs={'class': 'form-control'}),
             'turno': forms.TextInput(attrs={'class': 'form-control'}),
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
@@ -81,10 +70,7 @@ class ChefForm(forms.ModelForm):
         return validar_no_es_numero(self.cleaned_data['nombre'], "nombre del chef")
 
     def clean_turno(self):
-        # El turno no debería ser "111", mejor "Matutino"
         return validar_no_es_numero(self.cleaned_data['turno'], "turno")
-
-# 5. CIUDADES
 
 
 class CiudadForm(forms.ModelForm):
@@ -96,10 +82,7 @@ class CiudadForm(forms.ModelForm):
         }
 
     def clean_descripcion(self):
-        # Las ciudades pueden tener números (Ej: "Sector 7"), pero no ser SOLO números
         return validar_no_es_numero(self.cleaned_data['descripcion'], "nombre de la ciudad")
-
-# --- OTROS FORMS (Sin cambios mayores, pero ya importados) ---
 
 
 class CategoriaForm(forms.ModelForm):

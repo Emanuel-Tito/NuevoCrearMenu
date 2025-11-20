@@ -23,9 +23,7 @@ urlpatterns = [
     path('platos/eliminar/<int:plato_id>/', views.eliminar_plato,
          name='eliminar_plato'),  # Faltaba esta
 
-    # --- GESTIÓN DE CATEGORÍAS (Actualizado a la nueva gestión completa) ---
-    # Nota: 'crear_categoria' ahora se maneja dentro de 'lista_categorias' o puedes mantener la ruta vieja si la usas
-    # Redirige a la lista que tiene el form
+    # --- GESTIÓN DE CATEGORÍAS
     path('crear-categoria/', views.lista_categorias, name='crear_categoria'),
     path('categorias/', views.lista_categorias, name='lista_categorias'),
     path('categorias/editar/<int:categoria_id>/',
